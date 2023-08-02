@@ -46,13 +46,17 @@ plt.show()'''
 #MonteCarlo
 ###Calcul du prix du call par la moyenne de N trajectoires generees aleatoirement
 
+aleatoirement
+
 def MonteCarlo():
     M=0
-    for k in range(N-1):
-        W[k+1]=W[k]+np.sqrt(h)*normal[k]
+    for j in range(N):
+        
+        for k in range(N-1):
+            W[k+1]=W[k]+np.sqrt(h)*normal[k]
         S=[1 for i in range(N)]
         for j in range(len(S)-1):
-           S[j+1]=S[j]*(r*h+sigm*(W[j+1]-W[j]))+S[j]
+            S[j+1]=S[j]*(r*h+sigm*(W[j+1]-W[j]))+S[j]
         M+=np.exp(-r*10)*np.max(S[-1]-K,0)
     return M/N
 
