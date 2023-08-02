@@ -10,24 +10,30 @@ sigm=0.05
 h=0.01
 N=int(10/dt)
 P=100
-normal=np.random.normal(0,1,100)
+normal=np.random.normal(0,1,1000)
 W=[0 for i in range(N)]
 K=0.9
 M=0
 
 
-##Mouvement brownien et Call
 
-W=np.array(W)+np.sqrt(0.01)*np.random.normal(0,1,1000)
+
+##Mouvement brownien et Call
+W=[0 for i in range(N)]
 t=[i*dt for i in range(N)]
 S=[1 for i in range(N)]
 
+for k in range(N-1):
+    W[k+1]=W[k]+np.sqrt(h)*normal[k]
+    
+plt.plot(t,W)
+
 for k in range(len(S)-1):
     S[k+1]=S[k]*(r*h+sigm*(W[k+1]-W[k]))+S[k]
-S1=np.exp(r*np.array(t)+sigm*W)
-S2=np.exp((r-(sigm**2)/2)*np.array(t)+sigm*W)
+#S1=np.exp(r*np.array(t)+sigm*W)
+#S2=np.exp((r-(sigm**2)/2)*np.array(t)+sigm*W)
 
-##plot
+'''##plot
 plt.xlim(6,8)
 plt.ylim(1.75,2)
 plt.plot(t,S,label='s')
@@ -35,20 +41,22 @@ plt.plot(t,S1,label='s1')
 plt.plot(t,S2,label='s2')
 plt.legend()
 plt.grid()
-plt.show()
+plt.show()'''
 
 #MonteCarlo
 ###Calcul du prix du call par la moyenne de N trajectoires generees aleatoirement
 
 def MonteCarlo():
-    for k in range(N):
-        W=np.array(W)+np.sqrt(0.01)*np.random.normal(0,1,1000)
+    M=0
+    for k in range(N-1):
+        W[k+1]=W[k]+np.sqrt(h)*normal[k]
         S=[1 for i in range(N)]
         for j in range(len(S)-1):
            S[j+1]=S[j]*(r*h+sigm*(W[j+1]-W[j]))+S[j]
-    M+=np.exp(-r*10)*np.max(S[-1]-K,0)
+        M+=np.exp(-r*10)*np.max(S[-1]-K,0)
     return M/N
 
+print(MonteCarlo())
 Prix_1=MonteCarlo()
 
 #BlackScholes
@@ -57,4 +65,3 @@ Prix_1=MonteCarlo()
 d1=(1/(sigm*np.sqrt(10)))*(np.log(S[-1]/K)+((r+(sigm**2)/2)*10))
 d2=d1-sigm*np.sqrt(10)
 
-prix_2=S[0]*sp.stats.norm(d1)-K*np.exp(-r*10)*sp.stats.norm(d2)
