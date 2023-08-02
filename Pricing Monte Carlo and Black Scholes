@@ -1,6 +1,9 @@
+##import
 import numpy as np
 from random import *
 import matplotlib.pyplot as plt
+
+##donnees
 dt=0.01
 r=0.1
 sigm=0.05
@@ -13,10 +16,10 @@ K=0.9
 M=0
 
 
+##Mouvement brownien et Call
 
 W=np.array(W)+np.sqrt(0.01)*np.random.normal(0,1,1000)
 t=[i*dt for i in range(N)]
-
 S=[1 for i in range(N)]
 
 for k in range(len(S)-1):
@@ -24,6 +27,7 @@ for k in range(len(S)-1):
 S1=np.exp(r*np.array(t)+sigm*W)
 S2=np.exp((r-(sigm**2)/2)*np.array(t)+sigm*W)
 
+##plot
 plt.xlim(6,8)
 plt.ylim(1.75,2)
 plt.plot(t,S,label='s')
@@ -31,7 +35,7 @@ plt.plot(t,S1,label='s1')
 plt.plot(t,S2,label='s2')
 plt.legend()
 plt.grid()
-
+plt.show()
 
 #MonteCarlo
 for k in range(P):
@@ -44,9 +48,8 @@ print(M/P)
 
 #BlackScholes
 def rep(x):
-    return 1/(np.sqrt(2*np.pi))*np.exp(-((x)**2)/2)
-        
+    return 1/(np.sqrt(2*np.pi))*np.exp(-((x)**2)/2)        
 d1=(1/(sigm*np.sqrt(10)))*(np.log(S[-1]/K)+((r+(sigm**2)/2)*10))
 d2=d1-sigm*np.sqrt(10)
 
-print(rep(d1)-K*np.exp(-r*10)*rep(d2))
+print(sp.stats.norm(d1)-K*np.exp(-r*10)*sp.stats.norm(d2))
