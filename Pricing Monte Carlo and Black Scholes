@@ -38,18 +38,23 @@ plt.grid()
 plt.show()
 
 #MonteCarlo
-for k in range(P):
-    W=np.array(W)+np.sqrt(0.01)*np.random.normal(0,1,1000)
-    S=[1 for i in range(N)]
-    for j in range(len(S)-1):
-        S[j+1]=S[j]*(r*h+sigm*(W[j+1]-W[j]))+S[j]
+###Calcul du prix du call par la moyenne de N trajectoires generees aleatoirement
+
+def MonteCarlo():
+    for k in range(N):
+        W=np.array(W)+np.sqrt(0.01)*np.random.normal(0,1,1000)
+        S=[1 for i in range(N)]
+        for j in range(len(S)-1):
+           S[j+1]=S[j]*(r*h+sigm*(W[j+1]-W[j]))+S[j]
     M+=np.exp(-r*10)*np.max(S[-1]-K,0)
-print(M/P)
+    return M/N
+
+Prix_1=MonteCarlo()
 
 #BlackScholes
-def rep(x):
-    return 1/(np.sqrt(2*np.pi))*np.exp(-((x)**2)/2)        
+###Calcul du prix dè call par la formule de Black&Scholes
+       
 d1=(1/(sigm*np.sqrt(10)))*(np.log(S[-1]/K)+((r+(sigm**2)/2)*10))
 d2=d1-sigm*np.sqrt(10)
 
-print(sp.stats.norm(d1)-K*np.exp(-r*10)*sp.stats.norm(d2))
+prix_2=S[0]*sp.stats.norm(d1)-K*np.exp(-r*10)*sp.stats.norm(d2)
